@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de IMC</title>
+
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    
+    .grey-cell {
+      background-color: #f8f9fa;
+    }
+   
+    .obeso {
+      background-color: #ff6961; /* Rojo */
+    }
+    .sobrepeso {
+      background-color: #ffa07a; /* Naranja */
+    }
+    .normal {
+      background-color: #98fb98; /* Verde */
+    }
+    .bajo-peso {
+      background-color: #ffff99; /* Amarillo */
+    }
+  </style>
+</head>
+<body>
+
+<div class="container mt-5">
+  <h1 class="mb-4">Calculadora de IMC</h1>
+
+  <form id="imcForm">
+    <div class="form-group">
+      <label for="peso">Peso (kg):</label>
+      <input type="number" class="form-control" id="peso" required>
+      <small class="form-text text-muted">El peso debe estar entre 1 kg y 1000 kg.</small>
+    </div>
+
+    <div class="form-group">
+      <label for="altura">Altura (m):</label>
+      <input type="number" class="form-control" id="altura" step="0.01" required>
+      <small class="form-text text-muted">La altura debe estar entre 1.00 mts y 2.60 mts.</small>
+    </div>
+
+    <button type="button" class="btn btn-primary" onclick="calcularIMC()">Calcular IMC</button>
+    <button type="button" class="btn btn-danger" onclick="resetForm()">Eliminar la información</button>
+  </form>
+
+  <div class="mt-4">
+    <h2>Resultado</h2>
+    <p id="resultadoIMC"></p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Categoría</th>
+          <th>Resultado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="bajo-peso" class="grey-cell">
+          <td>Bajo peso</td>
+          <td></td>
+        </tr>
+        <tr id="normal" class="grey-cell">
+          <td>Normal</td>
+          <td></td>
+        </tr>
+        <tr id="sobrepeso" class="grey-cell">
+          <td>Sobrepeso</td>
+          <td></td>
+        </tr>
+        <tr id="obeso" class="grey-cell">
+          <td>Obeso</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Incluye Bootstrap JS y jQuery (Necesarios para el funcionamiento de Bootstrap) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+  function calcularIMC() {
+    // Obtén los valores de peso y altura desde el formulario
+    var pesoInput = document.getElementById("peso");
+    var alturaInput = document.getElementById("altura");
+
+    var peso = pesoInput.value;
+    var altura = alturaInput.value;
+
+    
+    if (peso < 1 || peso > 1000) {
+      alert("El peso debe estar entre 1 kg y 1000 kg.");
+      return;
+    }
+
+    
+    if (altura < 1.00 || altura > 2.60) {
+      alert("La altura debe estar entre 1.00 mts y 2.60 mts.");
+      return;
+    }
+
+    var imc = peso / (altura * altura);
+
+  
+    document.getElementById("resultadoIMC").innerText = "Tu IMC es: " + imc.toFixed(2);
+
+    document.getElementById("bajo-peso").cells[1].innerText = (imc <= 18.4) ? imc.toFixed(2) : "";
+    document.getElementById("normal").cells[1].innerText = (imc >= 18.5 && imc <= 24.9) ? imc.toFixed(2) : "";
+    document.getElementById("sobrepeso").cells[1].innerText = (imc >= 25 && imc <= 29.9) ? imc.toFixed(2) : "";
+    document.getElementById("obeso").cells[1].innerText = (imc >= 30) ? imc.toFixed(2) : "";
+
+    document.getElementById("bajo-peso").className = (imc <= 18.4) ? "bajo-peso" : "grey-cell";
+    document.getElementById("normal").className = (imc >= 18.5 && imc <= 24.9) ? "normal" : "grey-cell";
+    document.getElementById("sobrepeso").className = (imc >= 25 && imc <= 29.9) ? "sobrepeso" : "grey-cell";
+    document.getElementById("obeso").className = (imc >= 30) ? "obeso" : "grey-cell";
+
+    // Deshabilita los campos de entrada
+    pesoInput.disabled = true;
+    alturaInput.disabled = true;
+  }
+
+  function resetForm() {
+    // Habilita los campos de entrada y reinicia el formulario
+    document.getElementById("peso").disabled = false;
+    document.getElementById("altura").disabled = false;
+    document.getElementById("imcForm").reset();
+
+    // Reinicia la tabla y el resultado IMC
+    document.getElementById("bajo-peso").className = "grey-cell";
+    document.getElementById("normal").className = "grey-cell";
+    document.getElementById("sobrepeso").className = "grey-cell";
+    document.getElementById("obeso").className = "grey-cell";
+
+    document.getElementById("bajo-peso").cells[1].innerText = "";
+    document.getElementById("normal").cells[1].innerText = "";
+    document.getElementById("sobrepeso").cells[1].innerText = "";
+    document.getElementById("obeso").cells[1].innerText = "";
+
+    document.getElementById("resultadoIMC").innerText = "";
+  }
+</script>
+
+</body>
+</html>
